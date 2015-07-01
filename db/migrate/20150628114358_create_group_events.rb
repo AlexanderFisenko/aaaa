@@ -5,8 +5,8 @@ class CreateGroupEvents < ActiveRecord::Migration
       t.string     :aasm_state
       t.string     :location
       t.text       :description
-      t.date       :start_at
-      t.date       :end_at
+      t.date       :starts_at
+      t.date       :ends_at
       t.integer    :duration
       t.references :user, index: true
 

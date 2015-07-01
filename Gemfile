@@ -27,4 +27,7 @@ gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 
 gem 'aasm'
-gem 'inherited_resources'
+
+gem 'redcarpet'
+gem 'albino'
+gem 'nokogiri'
