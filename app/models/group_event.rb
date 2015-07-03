@@ -4,6 +4,7 @@ class GroupEvent < ActiveRecord::Base
   belongs_to :user
 
   validates_presence_of :name, :original_description, :starts_at
+  validates_presence_of :ends_at_or_duration
 
   before_save :set_duration,              unless: :duration
   before_save :set_ends_at,               unless: :ends_at
@@ -31,6 +32,10 @@ class GroupEvent < ActiveRecord::Base
   end
 
   private
+
+  def ends_at_or_duration
+    ends_at.present? || duration.present?
+  end
 
   def set_ends_at
     self.ends_at = starts_at + duration.days
