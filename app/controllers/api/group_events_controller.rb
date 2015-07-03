@@ -3,23 +3,24 @@ class API::GroupEventsController < ApplicationController
   respond_to :json
 
   def index
-    respond_with GroupEvent.all
+    respond_with :api, GroupEvent.all
   end
 
   def show
-    respond_with GroupEvent.find(params[:id])
+    respond_with :api, GroupEvent.find(params[:id])
   end
 
   def create
-    respond_with GroupEvent.create(group_event_params)
+    respond_with :api, GroupEvent.create(group_event_params)
   end
 
   def update
-    respond_with GroupEvent.update(params[:id], group_event_params)
+    respond_with :api, GroupEvent.update(params[:id], group_event_params)
   end
 
   def destroy
-    respond_with GroupEvent.delete!(params[:id])
+    GroupEvent.find(params[:id]).delete!
+    render nothing: true, status: 204
   end
 
 
@@ -34,15 +35,7 @@ class API::GroupEventsController < ApplicationController
       :duration,
       :starts_at,
       :ends_at,
-    ).merge(formatted_description: markdown(params[:group_event][:original_description]))
-
-    starts_at = params[:group_event][:starts_at]
-
-    ends_at = params[:group_event][:ends_at].presence || starts_at + params[:group_event][:duration].days
-    params[:group_event][:ends_at] = ends_at
-
-    duration = params[:group_event][:duration].presence || (ends_at - starts_at).to_i
-    params[:group_event][:duration] = duration
+    )
   end
 
 end
