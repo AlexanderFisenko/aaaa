@@ -3,9 +3,9 @@ class GroupEvent < ActiveRecord::Base
 
   belongs_to :user
 
-  validates_presence_of :name, :description
+  validates_presence_of :name, :original_description
 
-  validates_presence_of :name, :description, :location, :duration, :starts_at, :ends_at,
+  validates_presence_of :name, :original_description, :location, :duration, :starts_at, :ends_at,
         if: Proc.new { |record| record.aasm_state == 'published' }
 
   aasm do

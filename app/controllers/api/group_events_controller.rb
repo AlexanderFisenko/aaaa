@@ -1,24 +1,25 @@
 class API::GroupEventsController < ApplicationController
-  before_action :set_group_event, only: [:show, :destroy]
 
   respond_to :json
 
   def index
-    @group_events = GroupEvent.all
-
-    render json: @group_events
+    respond_with GroupEvent.all
   end
 
   def show
-    render json: @group_event
+    respond_with GroupEvent.find(params[:id])
   end
 
   def create
-    @group_event = GroupEvent.create(group_event_params)
+    respond_with GroupEvent.create(group_event_params)
+  end
+
+  def update
+    respond_with GroupEvent.update(params[:id], group_event_params)
   end
 
   def destroy
-    @group_event.delete!
+    respond_with GroupEvent.delete!(params[:id])
   end
 
 
@@ -27,13 +28,13 @@ class API::GroupEventsController < ApplicationController
   def group_event_params
     params.require(:group_event).permit(
       :name,
-      :description,
+      :original_description,
       :location,
       :aasm_state,
       :duration,
       :starts_at,
       :ends_at,
-    ).merge(description: markdown(params[:group_event][:description]))
+    ).merge(formatted_description: markdown(params[:group_event][:original_description]))
 
     starts_at = params[:group_event][:starts_at]
 
@@ -44,8 +45,4 @@ class API::GroupEventsController < ApplicationController
     params[:group_event][:duration] = duration
   end
 
-  def set_group_event
-    @group_event = GroupEvent.find(params[:id])
-  end
-  
 end
