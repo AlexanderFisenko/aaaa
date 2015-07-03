@@ -3,9 +3,10 @@ class GroupEvent < ActiveRecord::Base
 
   belongs_to :user
 
-  validates_presence_of :name, :original_description, :starts_at, :ends_at
+  validates_presence_of :name, :original_description, :starts_at
 
   before_save :set_duration,              unless: :duration
+  before_save :set_ends_at,               unless: :ends_at
   before_save :set_formatted_description, if: Proc.new { |group_event| group_event.original_description_changed? }
 
   aasm column: 'state' do
@@ -40,6 +41,13 @@ class GroupEvent < ActiveRecord::Base
   end
 
   def set_formatted_description
-    self.formatted_description = ApplicationController.helpers.markdown(original_description)
+    self.formatted_description = markdown(original_description)
   end
+
+  def markdown(text)
+    options = [:hard_wrap, :filter_html, :autolink, :no_intraemphasis, :fenced_code, :gh_blockcode]
+    return Markdown.new(text, *options).to_html.html_safe
+  end
+
+
 end
