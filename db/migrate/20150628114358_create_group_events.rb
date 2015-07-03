@@ -2,7 +2,7 @@ class CreateGroupEvents < ActiveRecord::Migration
   def change
     create_table :group_events do |t|
       t.string     :name
-      t.string     :aasm_state
+      t.string     :state
       t.string     :location
       t.text       :original_description
       t.text       :formatted_description

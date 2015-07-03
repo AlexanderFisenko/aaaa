@@ -3,22 +3,18 @@ class GroupEvent < ActiveRecord::Base
 
   belongs_to :user
 
-  validates_presence_of :name, :original_description
+  validates_presence_of :name, :original_description, :starts_at, :ends_at
 
-  validates_presence_of :name, :original_description, :location, :duration, :starts_at, :ends_at,
-        if: Proc.new { |record| record.aasm_state == 'published' }
+  before_save :set_duration,              unless: :duration
+  before_save :set_formatted_description, if: Proc.new { |group_event| group_event.original_description_changed? }
 
-  before_save :set_ends_at,               if: Proc.new { |group_event| group_event.ends_at.blank? }
-  before_save :set_duration,              if: Proc.new { |group_event| group_event.duration.blank? }
-  before_save :set_formatted_description, if: Proc.new { |group_event| group_event.formatted_description.blank? }
-
-  aasm do
+  aasm column: 'state' do
     state :draft, initial: true
     state :published
     state :deleted
 
     event :publish do
-      transitions from: :draft, to: :published
+      transitions from: :draft, to: :published, guard: :has_no_blank_fields?
     end
 
     event :delete do
@@ -26,7 +22,12 @@ class GroupEvent < ActiveRecord::Base
     end
   end
 
-
+  def has_no_blank_fields?
+    attribute_names.each do |column_name|
+      return false if self.send(column_name).blank?
+    end
+    true
+  end
 
   private
 

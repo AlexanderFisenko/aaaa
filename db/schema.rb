@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 20150628114358) do
 
   create_table "group_events", force: true do |t|
     t.string   "name"
-    t.string   "aasm_state"
+    t.string   "state"
     t.string   "location"
     t.text     "original_description"
     t.text     "formatted_description"
