@@ -33,13 +33,14 @@ gem 'nokogiri'
 gem 'pry'
 
 group :test, :development do
-  gem 'rspec-rails', '~> 3.0.0'
-  gem 'rspec-mocks', '~> 3.0.0'
+  gem 'rspec-rails'
+  gem 'rspec-mocks'
   gem 'launchy'
+  gem 'factory_girl_rails'
 end
 
 group :development do
   gem 'spring'
   gem 'guard'
-  gem 'guard-rspec', '~> 4.2.2', require: false
+  gem 'guard-rspec'
 end
